@@ -1,4 +1,5 @@
 #include "MyBot.h"
+#include "MyBotToken.hpp"
 #include <dpp/dpp.h>
 
 /* Be sure to place your token in the line below.
@@ -8,7 +9,7 @@
  * scopes 'bot' and 'applications.commands', e.g.
  * https://discord.com/oauth2/authorize?client_id=940762342495518720&scope=bot+applications.commands&permissions=139586816064
  */
-const std::string    BOT_TOKEN    = "add your token here";
+const std::string    BOT_TOKEN    = MY_BOT_TOKEN;
 
 int main()
 {

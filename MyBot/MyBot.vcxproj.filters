@@ -16,6 +16,9 @@
     <Filter Include="DPP">
       <UniqueIdentifier>{0c7369e9-66c5-45ca-8a7d-8891f46001be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{3cf88a0d-419c-47ef-ab46-e7dabb360127}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyBot.cpp">
@@ -149,5 +152,25 @@
     <ClInclude Include="MyBot.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="MyBotToken.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.gitignore">
+      <Filter>Misc</Filter>
+    </None>
+    <None Include="..\LICENSE">
+      <Filter>Misc</Filter>
+    </None>
+    <None Include="..\README.md">
+      <Filter>Misc</Filter>
+    </None>
+    <None Include="..\SECURITY.md">
+      <Filter>Misc</Filter>
+    </None>
+    <None Include="..\updatedpp.sh">
+      <Filter>Misc</Filter>
+    </None>
   </ItemGroup>
 </Project>

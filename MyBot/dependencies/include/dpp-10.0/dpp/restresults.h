@@ -43,31 +43,10 @@
 #include <iostream>
 #include <shared_mutex>
 #include <cstring>
+#include <dpp/entitlement.h>
+#include <dpp/sku.h>
 
 namespace dpp {
-
-#ifdef _WIN32
-	#ifdef _DEBUG
-		extern "C" DPP_EXPORT void you_are_using_a_debug_build_of_dpp_on_a_release_project();
-	#else
-		extern "C" DPP_EXPORT void you_are_using_a_release_build_of_dpp_on_a_debug_project();
-	#endif
-#endif
-
-struct DPP_EXPORT version_checker {
-	version_checker() {
-		#ifdef _WIN32
-			#ifdef _DEBUG
-				you_are_using_a_debug_build_of_dpp_on_a_release_project();
-			#else
-				you_are_using_a_release_build_of_dpp_on_a_debug_project();
-			#endif
-		#endif
-	}
-};
-
-static version_checker dpp_vc;
-
 
 /**
  * @brief A list of shards
@@ -90,22 +69,34 @@ protected:
 	gateway& fill_from_json_impl(nlohmann::json* j);
 
 public:
-	/// Gateway websocket url
+	/**
+	 * @brief Gateway websocket url.
+	 */
 	std::string url;
 
-	/// Number of suggested shards to start
+	/**
+	 * @brief Number of suggested shards to start.
+	 */
 	uint32_t shards;
 
-	/// Total number of sessions that can be started
+	/**
+	 * @brief Total number of sessions that can be started.
+	 */
 	uint32_t session_start_total;
 
-	/// How many sessions are left
+	/**
+	 * @brief How many sessions are left.
+	 */
 	uint32_t session_start_remaining;
 
-	/// How many seconds until the session start quota resets
+	/**
+	 * @brief How many seconds until the session start quota resets.
+	 */
 	uint32_t session_start_reset_after;
 
-	/// How many sessions can be started at the same time
+	/**
+	 * @brief How many sessions can be started at the same time.
+	 */
 	uint32_t session_start_max_concurrency;
 
 	/**
@@ -195,7 +186,11 @@ typedef std::variant<
 		automod_rule,
 		automod_rule_map,
 		onboarding,
-		welcome_screen
+		welcome_screen,
+		entitlement,
+		entitlement_map,
+		sku,
+		sku_map
 	> confirmable_t;
 
 /**
@@ -206,18 +201,22 @@ struct DPP_EXPORT error_detail {
 	 * @brief Object name which is in error
 	 */
 	std::string object;
+
 	/**
 	 * @brief Field name which is in error
 	 */
 	std::string field;
+
 	/**
 	 * @brief Error code
 	 */
 	std::string code;
+
 	/**
 	 * @brief Error reason (full message)
 	 */
 	std::string reason;
+
 	/**
 	 * @brief Object field index
 	 */
@@ -232,15 +231,18 @@ struct DPP_EXPORT error_info {
 	 * @brief Error code
 	 */
 	uint32_t code = 0;
+
 	/**
 	 * @brief Error message
 	 *
 	 */
 	std::string message;
+
 	/**
 	 * @brief Field specific error descriptions
 	 */
 	std::vector<error_detail> errors;
+
 	/**
 	 * @brief Human readable error message constructed from the above
 	 */
@@ -251,17 +253,23 @@ struct DPP_EXPORT error_info {
  * @brief The results of a REST call wrapped in a convenient struct
  */
 struct DPP_EXPORT confirmation_callback_t {
-	/** Information about the HTTP call used to make the request */
+	/**
+	 * @brief Information about the HTTP call used to make the request.
+	 */
 	http_request_completion_t http_info;
 
-	/** Value returned, wrapped in variant */
+	/**
+	 * @brief Value returned, wrapped in variant.
+	 */
 	confirmable_t value;
 
-	/** Owner/creator of the callback object */
+	/**
+	 * @brief Owner/creator of the callback object.
+	 */
 	const class cluster* bot;
 
 	/**
-	 * @brief Construct a new confirmation callback t object
+	 * @brief Construct a new confirmation callback t object.
 	 */
 	confirmation_callback_t() = default;
 

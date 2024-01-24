@@ -18,9 +18,19 @@
  * limitations under the License.
  *
  ************************************************************************************/
+#pragma once
+
+#include <dpp/utility.h>
+
+namespace dpp {
+
+struct task_dummy {
+	int* handle_dummy = nullptr;
+};
+
+}
 
 #ifdef DPP_CORO
-#pragma once
 
 #include "coro.h"
 
@@ -41,15 +51,25 @@ namespace detail {
 /* Internal cogwheels for dpp::task */
 namespace task {
 
-/** @brief State of a task */
+/**
+ * @brief State of a task
+ */
 enum class state_t {
-	/** @brief Task was started but never co_await-ed */
+	/**
+	 * @brief Task was started but never co_await-ed
+	 */
 	started,
-	/** @brief Task was co_await-ed and is pending completion */
+	/**
+	 * @brief Task was co_await-ed and is pending completion
+	 */
 	awaited,
-	/** @brief Task is completed */
+	/**
+	 * @brief Task is completed
+	 */
 	done,
-	/** @brief Task is still running but the actual dpp::task object is destroyed */
+	/**
+	 * @brief Task is still running but the actual dpp::task object is destroyed
+	 */
 	dangling
 };
 
@@ -251,7 +271,8 @@ public:
 
 } // namespace detail
 
-/** @class task task.h coro/task.h
+/**
+ * @class task task.h coro/task.h
  * @brief A coroutine task. It starts immediately on construction and can be co_await-ed, making it perfect for parallel coroutines returning a value.
  *
  * @warning - This feature is EXPERIMENTAL. The API may change at any time and there may be bugs.
@@ -477,7 +498,7 @@ public:
 #endif /* _DOXYGEN_ */
 
 namespace detail::task {
-	/**
+/**
  * @brief Awaitable returned from task::promise_t's final_suspend. Resumes the parent and cleans up its handle if needed
  */
 template <typename R>
@@ -489,7 +510,7 @@ struct final_awaiter {
 		return (false);
 	}
 
-	/*
+	/**
 	 * @brief The suspension logic of the coroutine when it finishes. Always suspend the caller, meaning cleaning up the handle is on us
 	 *
 	 * @param handle The handle of this coroutine
@@ -497,7 +518,7 @@ struct final_awaiter {
 	 */
 	[[nodiscard]] std_coroutine::coroutine_handle<> await_suspend(handle_t<R> handle) const noexcept;
 
-	/*
+	/**
 	 * @brief Function called when this object is co_awaited by the standard library at the end of final_suspend. Do nothing, return nothing
 	 */
 	void await_resume() const noexcept {}
@@ -746,6 +767,9 @@ inline void task<void>::await_resume_impl() const {
 	}
 }
 #endif /* _DOXYGEN_ */
+
+DPP_CHECK_ABI_COMPAT(task<void>, task_dummy)
+DPP_CHECK_ABI_COMPAT(task<uint64_t>, task_dummy)
 
 } // namespace dpp
 

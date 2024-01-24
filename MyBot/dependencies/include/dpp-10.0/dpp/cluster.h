@@ -231,12 +231,12 @@ public:
 	/**
 	 * @brief dpp::cluster is non-copyable
 	 */
-        cluster& operator=(const cluster&) = delete;
+	cluster& operator=(const cluster&) = delete;
 
 	/**
 	 * @brief dpp::cluster is non-moveable
 	 */
-        cluster& operator=(const cluster&&) = delete;
+	cluster& operator=(const cluster&&) = delete;
 
 	/**
 	 * @brief Destroy the cluster object
@@ -1312,6 +1312,36 @@ public:
 	 */
 	event_router_t<stage_instance_delete_t> on_stage_instance_delete;
 
+	/**
+	 * @brief Called when a user subscribes to an SKU.
+	 *
+	 * @see https://discord.com/developers/docs/monetization/entitlements#new-entitlement
+	 * @note Use operator() to attach a lambda to this event, and the detach method to detach the listener using the returned ID.
+	 * The function signature for this event takes a single `const` reference of type channel_delete_t&, and returns void.
+	 */
+	event_router_t<entitlement_create_t> on_entitlement_create;
+
+
+	/**
+	 * @brief Called when a user's subscription renews for the next billing period.
+	 * The `ends_at` field will have an updated value with the new expiration date.
+	 *
+	 * @see https://discord.com/developers/docs/monetization/entitlements#updated-entitlement
+	 * @note Use operator() to attach a lambda to this event, and the detach method to detach the listener using the returned ID.
+	 * The function signature for this event takes a single `const` reference of type channel_update_t&, and returns void.
+	 */
+	event_router_t<entitlement_update_t> on_entitlement_update;
+
+	/**
+	 * @brief Called when a user's entitlement is deleted.
+	 * These events are infrequent and only occur if Discord issues a refund, or Discord removes an entitlement via "internal tooling".
+	 * Entitlements **are not deleted** when they expire.
+	 *
+	 * @see https://discord.com/developers/docs/monetization/entitlements#deleted-entitlement
+	 * @note Use operator() to attach a lambda to this event, and the detach method to detach the listener using the returned ID.
+	 * The function signature for this event takes a single `const` reference of type channel_update_t&, and returns void.
+	 */
+	event_router_t<entitlement_delete_t> on_entitlement_delete;
 	
 	/**
 	 * @brief Post a REST request. Where possible use a helper method instead like message_create
@@ -1325,8 +1355,9 @@ public:
 	 * @param filename Filename to post for POST requests (for uploading files)
 	 * @param filecontent File content to post for POST requests (for uploading files)
 	 * @param filemimetype File content to post for POST requests (for uploading files)
+	 * @param protocol HTTP protocol to use (1.0 and 1.1 are supported)
 	 */
-	void post_rest(const std::string &endpoint, const std::string &major_parameters, const std::string &parameters, http_method method, const std::string &postdata, json_encode_t callback, const std::string &filename = "", const std::string &filecontent = "", const std::string &filemimetype = "");
+	void post_rest(const std::string &endpoint, const std::string &major_parameters, const std::string &parameters, http_method method, const std::string &postdata, json_encode_t callback, const std::string &filename = "", const std::string &filecontent = "", const std::string &filemimetype = "", const std::string& protocol = "1.1");
 
 	/**
 	 * @brief Post a multipart REST request. Where possible use a helper method instead like message_create
@@ -1337,11 +1368,9 @@ public:
 	 * @param method Method, e.g. GET, POST
 	 * @param postdata Post data (usually JSON encoded)
 	 * @param callback Function to call when the HTTP call completes. The callback parameter will contain amongst other things, the decoded json.
-	 * @param filename List of filenames to post for POST requests (for uploading files)
-	 * @param filecontent List of file content to post for POST requests (for uploading files)
-	 * @param filemimetypes List of mime types for each file to post for POST requests (for uploading files)
+	 * @param file_data List of files to post for POST requests (for uploading files)
 	 */
-	void post_rest_multipart(const std::string &endpoint, const std::string &major_parameters, const std::string &parameters, http_method method, const std::string &postdata, json_encode_t callback, const std::vector<std::string> &filename = {}, const std::vector<std::string>& filecontent = {}, const std::vector<std::string>& filemimetypes = {});
+	void post_rest_multipart(const std::string &endpoint, const std::string &major_parameters, const std::string &parameters, http_method method, const std::string &postdata, json_encode_t callback, const std::vector<message_file_data> &file_data = {});
 
 	/**
 	 * @brief Make a HTTP(S) request. For use when wanting asynchronous access to HTTP APIs outside of Discord.
@@ -1352,8 +1381,9 @@ public:
 	 * @param postdata POST data
 	 * @param mimetype MIME type of POST data
 	 * @param headers Headers to send with the request
+	 * @param protocol HTTP protocol to use (1.1 and 1.0 are supported)
 	 */
-	void request(const std::string &url, http_method method, http_completion_event callback, const std::string &postdata = "", const std::string &mimetype = "text/plain", const std::multimap<std::string, std::string> &headers = {});
+	void request(const std::string &url, http_method method, http_completion_event callback, const std::string &postdata = "", const std::string &mimetype = "text/plain", const std::multimap<std::string, std::string> &headers = {}, const std::string &protocol = "1.1");
 
 	/**
 	 * @brief Respond to a slash command
@@ -3621,6 +3651,57 @@ public:
 	 * On success the callback will contain a dpp::confirmation object in confirmation_callback_t::value. On failure, the value is undefined and confirmation_callback_t::is_error() method will return true. You can obtain full error details with confirmation_callback_t::get_error().
 	 */
 	void automod_rule_delete(snowflake guild_id, snowflake rule_id, command_completion_event_t callback = utility::log_error());
+
+	/**
+	 * @brief Returns all entitlements for a given app, active and expired.
+	 *
+	 * @see https://discord.com/developers/docs/monetization/entitlements#list-entitlements
+	 * @param user_id User ID to look up entitlements for.
+	 * @param sku_ids List of SKU IDs to check entitlements for.
+	 * @param before_id Retrieve entitlements before this entitlement ID.
+	 * @param after_id Retrieve entitlements after this entitlement ID.
+	 * @param limit Number of entitlements to return, 1-100 (default 100).
+	 * @param guild_id Guild ID to look up entitlements for.
+	 * @param exclude_ended Whether ended entitlements should be excluded from the search.
+	 * @param callback Function to call when the API call completes.
+	 * On success the callback will contain a dpp::emoji_map object in confirmation_callback_t::value. On failure, the value is undefined and confirmation_callback_t::is_error() method will return true. You can obtain full error details with confirmation_callback_t::get_error().
+	 */
+	void entitlements_get(snowflake user_id = 0, const std::vector<snowflake>& sku_ids = {}, snowflake before_id = 0, snowflake after_id = 0, uint8_t limit = 100, snowflake guild_id = 0, bool exclude_ended = false, command_completion_event_t callback = utility::log_error());
+
+	/**
+	 * @brief Creates a test entitlement to a given SKU for a given guild or user.
+	 * Discord will act as though that user or guild has entitlement to your premium offering.
+	 *
+	 * @see https://discord.com/developers/docs/monetization/entitlements#create-test-entitlement
+	 * @param new_entitlement The entitlement to create.
+	 * Make sure your dpp::entitlement_type (inside your dpp::entitlement object) matches the type of the owner_id
+	 * (if type is guild, owner_id is a guild id), otherwise it won't work!
+	 * @param callback Function to call when the API call completes.
+	 * On success the callback will contain a dpp::entitlement object in confirmation_callback_t::value. On failure, the value is undefined and confirmation_callback_t::is_error() method will return true. You can obtain full error details with confirmation_callback_t::get_error().
+	 */
+	void entitlement_test_create(const class entitlement& new_entitlement, command_completion_event_t callback = utility::log_error());
+
+	/**
+	 * @brief Deletes a currently-active test entitlement.
+	 * Discord will act as though that user or guild no longer has entitlement to your premium offering.
+	 *
+	 * @see https://discord.com/developers/docs/monetization/entitlements#delete-test-entitlement
+	 * @param entitlement_id The test entitlement to delete.
+	 * @param callback Function to call when the API call completes.
+	 * On success the callback will contain a dpp::confirmation object in confirmation_callback_t::value. On failure, the value is undefined and confirmation_callback_t::is_error() method will return true. You can obtain full error details with confirmation_callback_t::get_error().
+	 */
+	void entitlement_test_delete(snowflake entitlement_id, command_completion_event_t callback = utility::log_error());
+
+	/**
+	 * @brief Returns all SKUs for a given application.
+	 * @note Because of how Discord's SKU and subscription systems work, you will see two SKUs for your premium offering.
+	 * For integration and testing entitlements, you should use the SKU with type: 5.
+	 *
+	 * @see https://discord.com/developers/docs/monetization/skus#list-skus
+	 * @param callback Function to call when the API call completes.
+	 * On success the callback will contain a dpp::confirmation object in confirmation_callback_t::value. On failure, the value is undefined and confirmation_callback_t::is_error() method will return true. You can obtain full error details with confirmation_callback_t::get_error().
+	 */
+	void skus_get(command_completion_event_t callback = utility::log_error());
 
 #include <dpp/cluster_sync_calls.h>
 #ifdef DPP_CORO

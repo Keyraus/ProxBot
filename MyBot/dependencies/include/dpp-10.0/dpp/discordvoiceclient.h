@@ -93,6 +93,7 @@ struct DPP_EXPORT voice_out_packet {
 	 * Generally these will be RTP.
 	 */
 	std::string packet;
+
 	/**
 	 * @brief Duration of packet
 	 */
@@ -189,6 +190,7 @@ class DPP_EXPORT discord_voice_client : public websocket_client
 		 * voice payload.
 		 */
 		rtp_seq_t seq;
+
 		/**
 		 * @brief The timestamp of the RTP packet that generated this voice
 		 * payload.
@@ -197,6 +199,7 @@ class DPP_EXPORT discord_voice_client : public websocket_client
 		 * number wraps around.
 		 */
 		rtp_timestamp_t timestamp;
+
 		/**
 		 * @brief The event payload that voice handlers receive.
 		 */
@@ -226,6 +229,7 @@ class DPP_EXPORT discord_voice_client : public websocket_client
 			rtp_seq_t min_seq, max_seq;
 			rtp_timestamp_t min_timestamp, max_timestamp;
 		} range;
+
 		/**
 		 * @brief The queue of parked voice payloads.
 		 * 
@@ -234,10 +238,12 @@ class DPP_EXPORT discord_voice_client : public websocket_client
 		 * are parked and sorted in this queue.
 		 */
 		std::priority_queue<voice_payload> parked_payloads;
+
 		/**
 		 * @brief The decoder ctls to be set on the decoder.
 		 */
 		std::vector<std::function<void(OpusDecoder&)>> pending_decoder_ctls;
+
 		/**
 		 * @brief libopus decoder
 		 *
@@ -251,6 +257,7 @@ class DPP_EXPORT discord_voice_client : public websocket_client
 	 * @brief Thread used to deliver incoming voice data to handlers.
 	 */
 	std::thread voice_courier;
+
 	/**
 	 * @brief Shared state between this voice client and the courier thread.
 	 */
@@ -259,16 +266,19 @@ class DPP_EXPORT discord_voice_client : public websocket_client
 		 * @brief Protects all following members.
 		 */
 		std::mutex mtx;
+
 		/**
 		 * @brief Signaled when there is a new payload to deliver or terminating state has changed.
 		 */
 		std::condition_variable signal_iteration;
+
 		/**
 		 * @brief Voice buffers to be reported to handler, grouped by speaker.
 		 *
 		 * Buffers are parked here and flushed every 500ms.
 		 */
 		std::map<snowflake, voice_payload_parking_lot> parked_voice_payloads;
+
 		/**
 		 * @brief Used to signal termination.
 		 *
@@ -276,6 +286,7 @@ class DPP_EXPORT discord_voice_client : public websocket_client
 		 */
 		bool terminating = false;
 	} voice_courier_shared_state;
+
 	/**
 	 * @brief The run loop of the voice courier thread.
 	 */
@@ -553,7 +564,10 @@ public:
 	snowflake channel_id;
 
 	/**
-	 * @brief The audio type to be sent. The default type is recorded audio.
+	 * @brief The audio type to be sent.
+	 *
+	 * @note On Windows, the default type is overlap audio.
+	 * On all other platforms, it is recorded audio.
 	 *
 	 * If the audio is recorded, the sending of audio packets is throttled.
 	 * Otherwise, if the audio is live, the sending is not throttled.
@@ -583,10 +597,15 @@ public:
 	 */
 	enum send_audio_type_t
 	{
-	    satype_recorded_audio,
-	    satype_live_audio,
+		satype_recorded_audio,
+		satype_live_audio,
 		satype_overlap_audio
-	} send_audio_type = satype_recorded_audio;
+	} send_audio_type =
+#ifdef _WIN32
+	satype_overlap_audio;
+#else
+	satype_recorded_audio;
+#endif
 
 	/**
 	 * @brief Sets the gain for the specified user.
@@ -642,6 +661,13 @@ public:
 	 * @return dpp::utility::uptime Detail of how long the voice client has been connected for
 	 */
 	dpp::utility::uptime get_uptime();
+
+	/**
+	 * @brief The time (in milliseconds) between each interval when parsing audio.
+	 *
+	 * @warning You should only change this if you know what you're doing. It is set to 500ms by default.
+	 */
+	uint16_t iteration_interval{500};
 
 	/** Constructor takes shard id, max shards and token.
 	 * @param _cluster The cluster which owns this voice connection, for related logging, REST requests etc
@@ -832,6 +858,22 @@ public:
 	 * @return reference to self
 	 */
 	discord_voice_client& stop_audio();
+
+	/**
+	 * @brief Change the iteration interval time.
+	 *
+	 * @param time The time (in milliseconds) between each interval when parsing audio.
+	 *
+	 * @return Reference to self.
+	 */
+	discord_voice_client& set_iteration_interval(uint16_t interval);
+
+	/**
+	 * @brief Get the iteration interval time (in milliseconds).
+	 *
+	 * @return iteration_interval
+	 */
+	uint16_t get_iteration_interval();
 
 	/**
 	 * @brief Returns true if we are playing audio

@@ -19,9 +19,15 @@
     <Filter Include="Misc">
       <UniqueIdentifier>{3cf88a0d-419c-47ef-ab46-e7dabb360127}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\templatebot">
+      <UniqueIdentifier>{2ef359d5-70fd-46f0-b9b2-1b6b6d6af46b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MyBot.cpp">
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MyBot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -149,11 +155,14 @@
     <ClInclude Include="dependencies\include\dpp-10.0\dpp\wsclient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MyBot.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="MyBotToken.hpp">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MyBot.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\templatebot\templatebot.h">
+      <Filter>Source Files\templatebot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

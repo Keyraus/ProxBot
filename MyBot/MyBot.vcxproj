@@ -82,7 +82,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>dependencies\include\dpp-10.0;$(IncludePath)</IncludePath>
+    <IncludePath>dependencies\include\dpp-10.0;D:\Documents\Programmation\ProxBot\MyBot\include;$(IncludePath)</IncludePath>
     <LibraryPath>dependencies\64\debug\lib\dpp-10.0;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -179,7 +179,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="MyBot.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MyBot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dependencies\include\dpp-10.0\dpp\auditlog.h" />
@@ -223,8 +224,9 @@
     <ClInclude Include="dependencies\include\dpp-10.0\dpp\webhook.h" />
     <ClInclude Include="dependencies\include\dpp-10.0\dpp\win32_safe_warnings.h" />
     <ClInclude Include="dependencies\include\dpp-10.0\dpp\wsclient.h" />
-    <ClInclude Include="MyBot.h" />
+    <ClInclude Include="include\templatebot\templatebot.h" />
     <ClInclude Include="MyBotToken.hpp" />
+    <ClInclude Include="src\MyBot.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.gitignore" />

@@ -2,6 +2,13 @@
 MyBot/Debug
 MyBot/Release
 
+
+build/
+out/
+.vscode/
+.idea/
+tmp/
+config.json
 ## Ignore Secrets
 
 # Discord Secrets

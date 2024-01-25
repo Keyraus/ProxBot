@@ -22,13 +22,16 @@
     <Filter Include="Source Files\templatebot">
       <UniqueIdentifier>{2ef359d5-70fd-46f0-b9b2-1b6b6d6af46b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\command">
+      <UniqueIdentifier>{201b08dd-c0a9-4e23-b2dc-772224642fab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\MyBot.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\command\ping.cpp">
+      <Filter>Source Files\command</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,14 +158,20 @@
     <ClInclude Include="dependencies\include\dpp-10.0\dpp\wsclient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MyBotToken.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\MyBot.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\templatebot\templatebot.h">
       <Filter>Source Files\templatebot</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MyBotToken.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\command\ping.hpp">
+      <Filter>Source Files\command</Filter>
+    </ClInclude>
+    <ClInclude Include="src\visuals.hpp">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

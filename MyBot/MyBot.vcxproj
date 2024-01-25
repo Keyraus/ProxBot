@@ -179,8 +179,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\command\ping.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\MyBot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dependencies\include\dpp-10.0\dpp\auditlog.h" />
@@ -225,8 +225,10 @@
     <ClInclude Include="dependencies\include\dpp-10.0\dpp\win32_safe_warnings.h" />
     <ClInclude Include="dependencies\include\dpp-10.0\dpp\wsclient.h" />
     <ClInclude Include="include\templatebot\templatebot.h" />
-    <ClInclude Include="MyBotToken.hpp" />
+    <ClInclude Include="src\command\ping.hpp" />
     <ClInclude Include="src\MyBot.h" />
+    <ClInclude Include="src\MyBotToken.hpp" />
+    <ClInclude Include="src\visuals.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.gitignore" />

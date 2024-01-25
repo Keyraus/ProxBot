@@ -167,11 +167,11 @@
     <ClInclude Include="src\MyBotToken.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\command\ping.hpp">
-      <Filter>Source Files\command</Filter>
-    </ClInclude>
     <ClInclude Include="src\visuals.hpp">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\command\ping.hpp">
+      <Filter>Source Files\command</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -190,5 +190,10 @@
     <None Include="..\updatedpp.sh">
       <Filter>Misc</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

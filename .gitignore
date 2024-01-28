@@ -6,3 +6,4 @@ out/
 tmp/
 config.json
 MyBotToken.hpp
+/src/MyBotToken.hpp

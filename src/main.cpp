@@ -3,6 +3,11 @@
 #include <dpp/dpp.h>
 #include "visuals.hpp"
 #include "command/ping.hpp"
+#include <iostream>
+#include "restc-cpp/restc-cpp.h"
+
+using namespace std;
+using namespace restc_cpp;
 
 /* Be sure to place your token in the line below.
  * Follow steps here to get a token:

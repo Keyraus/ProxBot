@@ -6,6 +6,7 @@ set(BOT_NAME "ProxBot")
 project(${BOT_NAME})
 aux_source_directory("src" coresrc)
 aux_source_directory("src/command" coresrc)
+
 add_executable(${BOT_NAME} ${coresrc})
 
 string(ASCII 27 Esc)

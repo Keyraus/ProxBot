@@ -1,0 +1,28 @@
+#pragma once
+
+/* Edit the template file, not the generated header-file.
+*/
+
+#ifndef RESTC_CPP_CONFIG_H
+#define RESTC_CPP_CONFIG_H
+
+#ifndef BOOST_COROUTINES_NO_DEPRECATION_WARNING
+#   define BOOST_COROUTINES_NO_DEPRECATION_WARNING 1
+#endif
+
+#define RESTC_CPP_WITH_UNIT_TESTS 1
+#define RESTC_CPP_WITH_TLS 1
+#define RESTC_CPP_LOG_WITH_INTERNAL_LOG 1
+/* #undef RESTC_CPP_LOG_WITH_LOGFAULT */
+/* #undef RESTC_CPP_LOG_WITH_BOOST_LOG */
+/* #undef RESTC_CPP_LOG_WITH_CLOG */
+#define RESTC_CPP_WITH_ZLIB 1
+/* #undef RESTC_CPP_HAVE_BOOST_TYPEINDEX */
+/* #undef RESTC_CPP_LOG_JSON_SERIALIZATION */
+#define RESTC_CPP_USE_CPP17 1
+/* #undef RESTC_CPP_THREADED_CTX */
+
+#define RESTC_CPP_LOG_LEVEL 4
+#define RESTC_CPP_MAX_INPUT_BUFFER_LENGTH 0x7fffffff
+
+#endif // RESTC_CPP_CONFIG_H

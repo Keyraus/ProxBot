@@ -1,10 +1,11 @@
 cmake_minimum_required (VERSION 3.6)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-set(BOT_NAME "templatebot")
+set(BOT_NAME "ProxBot")
 
 project(${BOT_NAME})
 aux_source_directory("src" coresrc)
+aux_source_directory("src/command" coresrc)
 add_executable(${BOT_NAME} ${coresrc})
 
 string(ASCII 27 Esc)

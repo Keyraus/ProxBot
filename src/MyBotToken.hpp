@@ -1,2 +1,0 @@
-#pragma once
-#define MY_BOT_TOKEN "MTE2MjM3ODc0MjYzMTUwMTg5NA.GU46xI.MN2RHGRdI9prdm7Yu_y8fJmO1h35EWbocnedIE"
